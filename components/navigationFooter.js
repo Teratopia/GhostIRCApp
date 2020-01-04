@@ -2,14 +2,15 @@ import React, {useState} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import Colors from '../constants/colors';             //
 import Icon from 'react-native-vector-icons/Entypo';  //
+import FA5Icon from 'react-native-vector-icons/FontAwesome5';  //
 
 const NavigationFooter = props => {
 
       return (
         <View style={{width : '100%'}}>
           <View style={styles.rowContainer}>
-            <TouchableOpacity onPress={() => {props.furtherScreenHistory('STATUS')}} 
-                              style={props.currentScreen === 'STATUS' ?
+            <TouchableOpacity onPress={() => {props.furtherScreenHistory('PROFILE')}} 
+                              style={props.currentScreen === 'PROFILE' ?
                               styles.activeButton :
                               styles.inactiveButton
                               }>
@@ -24,13 +25,13 @@ const NavigationFooter = props => {
                   <Icon name="compass" size={18} color="white" style={{marginTop : 4}}/>
                   <Text style={styles.textStyle}>Search</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {props.furtherScreenHistory('FRIENDS')}} 
-                              style={props.currentScreen === 'FRIENDS' ?
+            <TouchableOpacity onPress={() => {props.furtherScreenHistory('GHOSTS')}} 
+                              style={props.currentScreen === 'GHOSTS' ?
                               styles.activeButton :
                               styles.inactiveButton
                               }>
-                  <Icon name="users" size={18} color="white" style={{marginTop : 4}}/>
-                  <Text style={styles.textStyle}>Friends</Text>
+                  <FA5Icon name="ghost" size={18} color="white" style={{marginTop : 4}}/>
+                  <Text style={styles.textStyle}>Ghosts</Text>
             </TouchableOpacity>
           </View>   
         </View>
