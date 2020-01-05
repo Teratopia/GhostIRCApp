@@ -5,6 +5,7 @@ import CheckBox from 'react-native-check-box';
 import colors from '../constants/colors';
 //import AsyncStorage from '@react-native-community/async-storage';
 import SignUpScreen from './SignUpScreen';
+import GenButton from '../components/genButton';
 
 
 //import io from 'socket.io-client/dist/socket.io';
@@ -101,20 +102,16 @@ const LoginScreen = props => {
       <View style={{height : 4}}/>
 
       <View style={constyles.buttonRowContainer}>
-        <View style={constyles.inactiveButton}>
-          <Button
+          <GenButton
             title="Log In"
             onPress={logInButtonHandler}
-            color="white"
+            //color="white"
           />
-        </View>
-        <View style={constyles.inactiveButton}>
-          <Button
+          <GenButton
             title="Sign Up"
             onPress={signUpButtonHandler}
-            color="white"
+            //color="white"
           />
-        </View>
       </View>
 
       {

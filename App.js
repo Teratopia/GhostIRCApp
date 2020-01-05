@@ -14,6 +14,7 @@ import colors from './constants/colors';
 import LoginScreen from './screens/LoginScreen';
 import networkSettings from './constants/networkSettings';
 import ScreenNavigation from './screens/ScreenNavigation';
+import DeviceInfo from 'react-native-device-info';    
 
 //import io from 'socket.io-client/dist/socket.io';
 
@@ -40,10 +41,18 @@ class App extends React.Component {
 
  constructor(props) {
   super(props);
-  this.socket = io('http://10.0.2.2:3000', {jsonp : false});
-  this.socket.on('connect', () => {
+  if(DeviceInfo.getSystemName() === 'Android'){
+    this.socket = io('http://10.0.2.2:3000', {jsonp : false});
+    this.socket.on('connect', () => {
     console.log('CONNECTION SUCCESSFUL');
-  });
+    });
+  } else {
+    this.socket = io('http://127.0.0.1:3000', {jsonp : false});
+    this.socket.on('connect', () => {
+    console.log('CONNECTION SUCCESSFUL');
+    });
+  }
+  
  }
 
  /*
