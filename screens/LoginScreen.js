@@ -82,7 +82,7 @@ const LoginScreen = props => {
       <Text style={constyles.genH1Text}>GhostIRC</Text>
       <View style={{height : 4}}/>
 
-      <Text style={constyles.genH4Text}>Email</Text>
+      <Text style={{...constyles.genH5Text, color : colors.secondary}}>Email</Text>
       <View style={{ ...constyles.genTextInputRowContainer, marginTop: 0 }}>
         <TextInput style={constyles.genTextInput}
           //placeholder='email'
@@ -90,7 +90,7 @@ const LoginScreen = props => {
           //returnKeyLabel="done"
         />
       </View>
-      <Text style={constyles.genH4Text}>Password</Text>
+      <Text style={{...constyles.genH5Text, color : colors.secondary}}>Password</Text>
       <View style={{ ...constyles.genTextInputRowContainer, marginTop: 0 }}>
         <TextInput style={constyles.genTextInput}
           //placeholder='password'

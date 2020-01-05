@@ -69,9 +69,10 @@ const TouchTile = props => {
         <ImageBackground 
             source={require('../images/testGhost.png')} 
             style={{...styles.innerSquare}}
+            resizeMode='contain'
             >
             <View style={{backgroundColor : 'black', width : '100%', height : '100%', justifyContent : 'center', alignItems : 'center', opacity : .5}}/>
-            <Text style={{...styles.innerTextStyle}}>{props.title}</Text>
+            <Text style={{...styles.innerTextStyle, textAlign : 'center'}}>{props.title}</Text>
         </ImageBackground>
         {
             props.cornerCount && props.cornerCount > 0 ?

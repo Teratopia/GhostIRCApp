@@ -54,10 +54,32 @@ const styles = StyleSheet.create({
         fontSize : 68,
         fontWeight : '800',
     },
+    genH2Text : {
+        fontSize : 48,
+        fontWeight : '700',
+    },
+    genH3Text : {
+        fontSize : 24,
+        fontWeight : '500',
+        //color : colors.secondary,
+        //textAlign : 'center'
+    },
     genH4Text : {
+        fontSize : 18,
+        fontWeight : '500',
+        //color : colors.secondary,
+        //textAlign : 'center'
+    },
+    genH5Text : {
         fontSize : 14,
         fontWeight : '500',
-        color : colors.secondary,
+        //color : colors.secondary,
+        //textAlign : 'center'
+    },
+    genH6Text : {
+        fontSize : 10,
+        fontWeight : '400',
+        //color : colors.secondary,
         //textAlign : 'center'
     },
 
