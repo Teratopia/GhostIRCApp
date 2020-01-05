@@ -19,11 +19,11 @@ const GhostsScreen = props => {
         onPress={() => {selectGhostType('SPRITES')}}
       />
       <TouchTile 
-        title="SHADES" 
+        title="SHADOWS" 
         sizeChange={32} 
         cornerCount={0}
         fontSize={24}
-        onPress={() => {selectGhostType('SHADES')}}
+        onPress={() => {selectGhostType('SHADOWS')}}
       />
     </View>
 

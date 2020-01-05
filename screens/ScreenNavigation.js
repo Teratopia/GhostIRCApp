@@ -13,6 +13,9 @@ import LoginScreen from './LoginScreen';
 import SearchScreen from './SearchScreen';
 import ProfileScreen from './ProfileScreen';
 import GhostsScreen from './GhostsScreen';
+import UserGhostsScreen from './UserGhostsScreen';
+import CreateGhostScreen from './CreateGhostScreen';
+
 
 
 const ScreenNavigation = props => {
@@ -60,6 +63,7 @@ const ScreenNavigation = props => {
             mainView = <SearchScreen
             socket={props.socket}
             user={user}
+            furtherScreenHistory={furtherScreenHistory}
             />
             break;
         case 'PROFILE':
@@ -67,6 +71,7 @@ const ScreenNavigation = props => {
             mainView = <ProfileScreen
             socket={props.socket}
             user={user}
+            furtherScreenHistory={furtherScreenHistory}
             />
             break;
         case 'GHOSTS':
@@ -74,6 +79,23 @@ const ScreenNavigation = props => {
             mainView = <GhostsScreen
             socket={props.socket}
             user={user}
+            furtherScreenHistory={furtherScreenHistory}
+            />
+            break;
+        case 'MY GHOSTS':
+            console.log('2');
+            mainView = <UserGhostsScreen
+            socket={props.socket}
+            user={user}
+            furtherScreenHistory={furtherScreenHistory}
+            />
+            break;
+        case 'CREATE GHOST':
+            console.log('2');
+            mainView = <CreateGhostScreen
+            socket={props.socket}
+            user={user}
+            furtherScreenHistory={furtherScreenHistory}
             />
             break;
         default:

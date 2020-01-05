@@ -7,7 +7,6 @@ import colors from '../constants/colors';
 import SignUpScreen from './SignUpScreen';
 import GenButton from '../components/genButton';
 
-
 //import io from 'socket.io-client/dist/socket.io';
 
 const LoginScreen = props => {

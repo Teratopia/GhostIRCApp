@@ -31,7 +31,7 @@ const ProfileScreen = props => {
                   title="GHOSTS"
                   sizeChange={32}
                   fontSize={24}
-                  onPress={() => {}}
+                  onPress={() => {props.furtherScreenHistory('MY GHOSTS')}}
                   />
                 <TouchTile 
                   title="HISTORY"
