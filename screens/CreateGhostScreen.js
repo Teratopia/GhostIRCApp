@@ -4,108 +4,79 @@ import constyles from '../constants/constyles';
 import colors from '../constants/colors';
 import moment from 'moment';
 import TouchTile from '../components/touchTile';
+import GenInfoModal from '../modals/genInfoModal';
+import CreateGhostOptionsList from '../components/createGhostOptionsList';
+import CreateGhostForm from '../components/createGhostForm';
+
+
 
 const CreateGhostScreen = props => {
 
+    const [modalView, setModalView] = useState();
+    const [ghostType, setGhostType] = useState();
+
     function handleSelection(selection){
-        
+        if(selection === 'EIDOLON'){
+            setModalView(<GenInfoModal 
+                headerText="EIDOLON"
+                subheaderText="The Sprites For Historical Figures"
+                bodyTextArray={[
+                    "An Eidolon manager's goal is to approximate the character of a historical figure as accurately "+
+                    "and transparently as possible.",
+                    "Eidola are extraordinary ghosts; they cannot be maintained by just anyone. "+
+                    "GhostIRC strives to give historical figures the respect they deserve and the first step "+
+                    "is you.",
+                    "The creator of an Eidolon must be an expert on the figure in question. For this reason "+
+                    "all Eidolon creators must be vetted before they can be confirmed.",
+                    
+                ]}
+                onClose={() => {setModalView(null)}}
+                secondButtonTitle="Create"
+                secondButtonOnPress={() => {
+                    setGhostType('EIDOLON');
+                    setModalView(null);
+                }}
+                activeSecondButton={true}
+            />);
+            return;
+        }
+        if(selection === 'ESSENCE'){
+            setModalView(<GenInfoModal 
+                headerText="ESSENCE"
+                subheaderText="The Sprites For Entities"
+                bodyTextArray={[
+                    "An Essence manager's goal is to approximate the character of an entity or concept as accurately "+
+                    "and transparently as possible.",
+                    "Essences are extraordinary ghosts; they cannot be maintained by just anyone. "+
+                    "GhostIRC strives to give all entities the respect they deserve and the first step "+
+                    "is you.",
+                    "The creator of an Essence must be an expert on the entity or concept in question. For this reason "+
+                    "all Essence creators must be vetted before they can be confirmed.",
+                    
+                ]}
+                onClose={() => {setModalView(null)}}
+                secondButtonTitle="Create"
+                secondButtonOnPress={() => {
+                    setGhostType('ESSENCE');
+                    setModalView(null);
+                }}
+                activeSecondButton={true}
+            />);
+            return;
+        }
+        setGhostType(selection);
     }
 
-    return  <SafeAreaView style={{flex : 1, justifyContent : 'center', alignItems : 'center'}}>
-                <ScrollView style={{flex : 1, width : '100%', marginBottom : 8}}>
-                <Text style={{...constyles.genH3Text, textAlign : 'center'}}>What Type of Ghost?</Text>
-                <TouchableOpacity 
-                onPress={()=>{handleSelection("SPRITE")}}
-                style={{ flexDirection : 'row' }}>
-                <View style={styles.ghostTypeContainer}>
-                    <Text style={styles.ghostTypeHeader}>SPRITE</Text>
-                    <Text style={styles.ghostTypeSubHeader}>Cost: 100 Ecto</Text>
-                    <View style={{width : '80%', height : 1, backgroundColor : 'white'}}/>
-                    <Text style={styles.ghostTypeText}>
-                        Sprites are the most common ghosts. They typically appear in one location 
-                        but they can inhabit many. People can speak with a befriended Sprite 
-                        from anywhere and can view them on the map, unless they are Shaded.
-                    </Text>
-                </View>
-                </TouchableOpacity>
+    return  <View style={{flex : 1, justifyContent : 'center', alignItems : 'center', margin : 12}}>
 
-                <TouchableOpacity 
-                onPress={()=>{handleSelection("WISP")}}
-                style={{ flexDirection : 'row' }}>
-                <View style={styles.ghostTypeContainer}>
-                    <Text style={styles.ghostTypeHeader}>WILL-O'-THE-WISP</Text>
-                    <Text style={styles.ghostTypeSubHeader}>Cost: 500+ Ecto</Text>
-                    <View style={{width : '80%', height : 1, backgroundColor : 'white'}}/>
-                    <Text style={styles.ghostTypeText}>
-                        Will-o'-the-Wisps are rare, elusive ghosts that lead friendly travellers to new 
-                        locations. Always visible on the map, the cost of a Wisp varies by 
-                        the distance of the path it creates.
-                    </Text>
-                </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity 
-                onPress={()=>{handleSelection("CHANNEL")}}
-                style={{ flexDirection : 'row' }}>
-                <View style={styles.ghostTypeContainer}>
-                    <Text style={styles.ghostTypeHeader}>CHANNEL</Text>
-                    <Text style={styles.ghostTypeSubHeader}>Cost: 1000 Ecto</Text>
-                    <View style={{width : '80%', height : 1, backgroundColor : 'white'}}/>
-                    <Text style={styles.ghostTypeText}>
-                        Channels are not ghosts, per se, more like conduits for interacting with others 
-                        through space and time. Visible on the map unless they are shaded, you must be 
-                        near a channel in order to converse with others through it.
-                    </Text>
-                </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity 
-                onPress={()=>{handleSelection("SHADOW")}}
-                style={{ flexDirection : 'row' }}>
-                <View style={styles.ghostTypeContainer}>
-                    <Text style={styles.ghostTypeHeader}>SHADOW</Text>
-                    <Text style={styles.ghostTypeSubHeader}>Cost: 0 Ecto</Text>
-                    <View style={{width : '80%', height : 1, backgroundColor : 'white'}}/>
-                    <Text style={styles.ghostTypeText}>
-                        Shadows are the rarest and most unique ghost type. They are not attached to a location
-                        at all--instead, they are attached to a living person. Creating a Shadow means making
-                        a one of a kind ghost just for you.
-                    </Text>
-                </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity 
-                onPress={()=>{handleSelection("EIDOLON")}}
-                style={{ flexDirection : 'row' }}>
-                <View style={styles.ghostTypeContainer}>
-                    <Text style={styles.ghostTypeHeader}>EIDOLON</Text>
-                    <Text style={styles.ghostTypeSubHeader}>Cost: 10,000 Ecto</Text>
-                    <View style={{width : '80%', height : 1, backgroundColor : 'white'}}/>
-                    <Text style={styles.ghostTypeText}>
-                        Creating an Eidolon is a difficult and venerable task that should not be taken lightly. 
-                        An Eidolon is akin to a Sprite, but with an important distinction: Eidola represent real
-                        figures from history.
-                    </Text>
-                </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity 
-                onPress={()=>{handleSelection("ESSENCE")}}
-                style={{ flexDirection : 'row' }}>
-                <View style={styles.ghostTypeContainer}>
-                    <Text style={styles.ghostTypeHeader}>ESSENCE</Text>
-                    <Text style={styles.ghostTypeSubHeader}>Cost: 10,000 Ecto</Text>
-                    <View style={{width : '80%', height : 1, backgroundColor : 'white'}}/>
-                    <Text style={styles.ghostTypeText}>
-                        Creating an Essence is a difficult and venerable task that should not be taken lightly. 
-                        An Essence is akin to a Sprite, but with an important distinction: Essences represent real 
-                        life entities.
-                    </Text>
-                </View>
-                </TouchableOpacity>
-
-                </ScrollView>
-            </SafeAreaView>
+                { ghostType ?
+                    <CreateGhostForm ghostType={ghostType}/>
+                :
+                    <CreateGhostOptionsList handleSelection={handleSelection}/>
+                }
+                
+                {modalView}
+            </View>
     
 }
 

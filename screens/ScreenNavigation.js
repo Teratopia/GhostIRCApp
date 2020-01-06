@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Keyboard } from 'react-native';
 import constyles from '../constants/constyles';
 import CheckBox from 'react-native-check-box';
 import colors from '../constants/colors';
@@ -15,6 +15,8 @@ import ProfileScreen from './ProfileScreen';
 import GhostsScreen from './GhostsScreen';
 import UserGhostsScreen from './UserGhostsScreen';
 import CreateGhostScreen from './CreateGhostScreen';
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 
 
@@ -37,7 +39,10 @@ const ScreenNavigation = props => {
     }
 
     function goBackInHistory(){
-        if(screenHistory[screenHistory.length -1] !== 'LOGIN'){
+        if(screenHistory.length > 1){
+          if(screenHistory.length === 2){
+            AsyncStorage.setItem('@autoLogin', 'FALSE');
+          }
             let updatedHistory = [...screenHistory];
             updatedHistory.splice(updatedHistory.length -1, 1);
             setScreenHistory(updatedHistory);
@@ -112,21 +117,25 @@ const ScreenNavigation = props => {
     if(screenHistory.length === 1){
       return mainView;
     } else {
-      return <View style={system === 'Android' ? styles.androidScreen : styles.screen}>
-        <NavigationHeader 
-                title={screenHistory[screenHistory.length - 1]}
-                leftIcon={ screenHistory.length > 2 ? 'chevron-thin-left' : 'log-out'}
-                leftIconFunction={goBackInHistory}
-                rightIcon="menu" 
-                rightIconFunction={() => {}}
-                />
-        {mainView}
-        <NavigationFooter
-          furtherScreenHistory={furtherScreenHistory}
-          currentScreen={screenHistory[screenHistory.length - 1]}
-        />
-        { model === 'iPhone 11' ? <View style={{height : 36, backgroundColor : 'black'}}/> : null }
-      </View>
+      return <TouchableOpacity
+              onPress={() => {Keyboard.dismiss()}}
+              style={system === 'Android' ? styles.androidScreen : styles.screen}
+              activeOpacity={1}
+              >
+              <NavigationHeader 
+                      title={screenHistory[screenHistory.length - 1]}
+                      leftIcon={ screenHistory.length > 2 ? 'chevron-thin-left' : 'log-out'}
+                      leftIconFunction={goBackInHistory}
+                      rightIcon="menu" 
+                      rightIconFunction={() => {}}
+                      />
+              {mainView}
+              <NavigationFooter
+                furtherScreenHistory={furtherScreenHistory}
+                currentScreen={screenHistory[screenHistory.length - 1]}
+              />
+              { model === 'iPhone 11' ? <View style={{height : 36, backgroundColor : 'black'}}/> : null }
+            </TouchableOpacity>
     }
     
     
