@@ -124,7 +124,7 @@ const CreateGhostForm = props => {
               <View style={{flexDirection : 'row', flex : 1, marginBottom : 12}}>
                 <TextInput style={{...constyles.genTextInput, textAlign : 'auto', textAlignVertical : 'top', justifyContent : 'flex-start'}}
                     placeholder="e.g. Hi there! I'm Casper the friendly ghost!"
-                    onSubmitEditing={(e) => {setChatCardText(e.nativeEvent.text)}}
+                    onBlur={(e) => {setChatCardText(e.nativeEvent.text)}}
                     multiline={true}
                 />
               </View>

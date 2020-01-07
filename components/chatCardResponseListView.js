@@ -11,11 +11,24 @@ const ChatCardResponseListView = props => {
                 style={{flex : 1}}
                 data={props.responseList}
                 renderItem={itemData => 
-                    <View style={{...styles.responseContainer, borderColor : colors.tertiary}}>
+                    <View style={
+                        itemData.item.ownerId ?
+                        {...styles.responseContainer, 
+                            borderColor : colors.primary, 
+                            alignItems : 'center',
+                            backgroundColor : colors.tertiaryFaded
+                        }
+                        :
+                        {...styles.responseContainer, 
+                            borderColor : colors.tertiary, 
+                            alignItems : 'center', 
+                            backgroundColor : colors.secondaryFaded
+                        }}
+                        >
                         <TouchableOpacity 
-                            style={{flex : 1}}
+                            style={{flex : 1, padding : 8}}
                             onPress={()=>{props.responseTouchHandler(itemData.item)}}>
-                            <Text style={constyles.genH4Text}>{itemData.item.text}</Text>
+                            <Text style={constyles.genH5Text}>{itemData.item.text}</Text>
                         </TouchableOpacity>
                         <View style={{
                             flexDirection : 'row', 
@@ -56,11 +69,11 @@ const styles = StyleSheet.create({
         //marginHorizontal : 12,
         borderWidth : 1,
         borderColor : colors.primary,
-        borderRadius : 24,
-        marginVertical : 6,
+        borderRadius : 12,
+        marginVertical : 4,
         justifyContent : 'space-between',
         //width : '100%',
-        padding : 4,
+        //padding : 8,
         paddingHorizontal : 12
     },
 })

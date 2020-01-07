@@ -67,7 +67,7 @@ const UserGhostsScreen = props => {
                     </View>
                   </TouchableOpacity>
                 }
-                keyExtractor={userGhosts => userGhosts._id}
+                keyExtractor={itemData => itemData._id}
               />
           :
           null

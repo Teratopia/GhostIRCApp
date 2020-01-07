@@ -49,6 +49,7 @@ const LoginScreen = props => {
     async function attachSocketListeners(){
       console.log('attachSocketListeners 1');
       props.socket.on('loginUser', res => {
+        console.log('login 1, res = ', res);
         if(res.success){
           console.log('login success, res = ', res);
           props.setUser(res.user);
