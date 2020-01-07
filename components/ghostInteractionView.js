@@ -143,7 +143,9 @@ const GhostInteractionView = props => {
         setIsInit(true);
     }
 
-    return <View style={{
+    console.log('newResponseText = ', newResponseText);
+
+    return <SafeAreaView style={{
         flex : 1, 
         width : '100%', 
         paddingVertical : 8, 
@@ -188,7 +190,9 @@ const GhostInteractionView = props => {
             </TouchableOpacity>
         </View>
         : null}
-
+        <ScrollView 
+        style={{width : '100%'}}
+        >
         <ChatCardResponseListView
             responseList={currentChatCard.responses}
             responseTouchHandler={responseTouchHandler}
@@ -204,6 +208,7 @@ const GhostInteractionView = props => {
             responseDownVoteHandler={responseDownVoteHandler}
             responseFlagHandler={responseFlagHandler}
         />
+        </ScrollView>
 
         
 
@@ -258,7 +263,7 @@ const GhostInteractionView = props => {
             </View>
         </View>
     }      
-    </View>
+    </SafeAreaView>
 }
 
 const styles = StyleSheet.create({
@@ -268,7 +273,8 @@ const styles = StyleSheet.create({
         borderTopColor : colors.secondary, 
         borderTopWidth : 1,
         paddingVertical : 4,
-        flex : 1
+        flex : 1,
+        width : '100%'
     },
     responseContainer : {
         //flex : 1,

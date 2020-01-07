@@ -1,56 +1,83 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, FlatList } from 'react-native';
 import constyles from '../constants/constyles';
 import colors from '../constants/colors';
 import Icon from 'react-native-vector-icons/Entypo';  //
 
 const ChatCardResponseListView = props => {
+    const [viewLowerRowId, setViewLowerRowId] = useState();
 
-    return <View style={{flexDirection : 'row'}}>
-            <FlatList
-                style={{flex : 1}}
-                data={props.responseList}
-                renderItem={itemData => 
-                    <View style={
-                        itemData.item.ownerId ?
-                        {...styles.responseContainer, 
-                            borderColor : colors.primary, 
-                            alignItems : 'center',
-                            backgroundColor : colors.tertiaryFaded
-                        }
-                        :
-                        {...styles.responseContainer, 
-                            borderColor : colors.tertiary, 
-                            alignItems : 'center', 
-                            backgroundColor : colors.secondaryFaded
-                        }}
-                        >
+    function toggleViewLower(id){
+        if(viewLowerRowId){
+            setViewLowerRowId(null);
+        } else {
+            setViewLowerRowId(id);
+        }
+    }
+
+    return <View 
+    style={{width : '100%'}}
+    >
+        {
+            props.responseList.map(response=>{
+                return <View style={
+                    response.ownerId ?
+                    {...styles.responseContainer, 
+                        borderColor : colors.primary, 
+                        alignItems : 'center',
+                        backgroundColor : colors.tertiaryFaded
+                    }
+                    :
+                    {...styles.responseContainer, 
+                        borderColor : colors.tertiary, 
+                        alignItems : 'center', 
+                        backgroundColor : colors.secondaryFaded
+                    }}
+                    >
+                        <View style={styles.mainRow}>
+
+                    <TouchableOpacity 
+                        style={{flex : 1, padding : 8}}
+                        onPress={()=>{props.responseTouchHandler(response)}}>
+                        <Text style={constyles.genH5Text}>{response.text}</Text>
+                    </TouchableOpacity>
+                    <View style={{
+                        flexDirection : 'row', 
+                        justifyContent : 'center', 
+                        alignItems : 'center'}}>
                         <TouchableOpacity 
-                            style={{flex : 1, padding : 8}}
-                            onPress={()=>{props.responseTouchHandler(itemData.item)}}>
-                            <Text style={constyles.genH5Text}>{itemData.item.text}</Text>
+                            onPress={()=>{props.responseUpVoteHandler(response)}}>
+                            <Icon name="arrow-bold-up" size={18} color={colors.secondary} style={{marginTop : 4}}/>
                         </TouchableOpacity>
-                        <View style={{
-                            flexDirection : 'row', 
-                            justifyContent : 'center', 
-                            alignItems : 'center'}}>
+                        <TouchableOpacity 
+                            onPress={()=>{toggleViewLower(response._id)}}>
+                            <Icon name="info" size={18} color={colors.secondary} style={{marginTop : 4}}/>
+                        </TouchableOpacity>
+                    </View>
+                    </View>
+                    {
+                        viewLowerRowId === response._id ?
+                        <View style={{...styles.mainRow, paddingBottom : 8}}>
                             <TouchableOpacity 
-                                onPress={()=>{props.responseUpVoteHandler(itemData.item)}}>
+                                onPress={()=>{setViewLowerRow(previous=>!previous)}}>
                                 <Icon name="arrow-bold-up" size={18} color={colors.secondary} style={{marginTop : 4}}/>
                             </TouchableOpacity>
                             <TouchableOpacity 
-                                onPress={()=>{props.responseDownVoteHandler(itemData.item)}}>
-                                <Icon name="arrow-bold-down" size={18} color={colors.secondary} style={{marginTop : 4, marginHorizontal : 8}}/>
+                                onPress={()=>{setViewLowerRow(previous=>!previous)}}>
+                                <Icon name="arrow-bold-down" size={18} color={colors.secondary} style={{marginTop : 4}}/>
                             </TouchableOpacity>
                             <TouchableOpacity 
-                                onPress={()=>{props.responseFlagHandler(itemData.item)}}>
+                                onPress={()=>{setViewLowerRow(previous=>!previous)}}>
                                 <Icon name="flag" size={18} color={colors.secondary} style={{marginTop : 4}}/>
                             </TouchableOpacity>
                         </View>
-                    </View>
-                }
-                keyExtractor={itemData => itemData._id}
-            />
+                        :
+                        null
+                    }
+                    
+                </View>
+            })
+        }
         </View>
 }
 
@@ -65,17 +92,22 @@ const styles = StyleSheet.create({
     },
     responseContainer : {
         //flex : 1,
-        flexDirection : 'row',
+        //flexDirection : 'row',
         //marginHorizontal : 12,
         borderWidth : 1,
         borderColor : colors.primary,
         borderRadius : 12,
         marginVertical : 4,
-        justifyContent : 'space-between',
+        //justifyContent : 'space-between',
         //width : '100%',
         //padding : 8,
         paddingHorizontal : 12
     },
+    mainRow : {
+        flexDirection : 'row',
+        justifyContent : 'space-between',
+        width : '100%'
+    }
 })
 
 export default ChatCardResponseListView;

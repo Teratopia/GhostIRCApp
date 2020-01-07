@@ -13,25 +13,21 @@ const ChatCardRouteListView = props => {
     return <View 
     //style={{flexDirection : 'row'}}
     >
-        <Text>test</Text>
-            <FlatList
-                //style={{flex : 1}}
-                data={props.chatCards}
-                renderItem={itemData => 
-                    <TouchableOpacity 
-                        onPress={() => setSelectedCard(itemData.item)}
-                        style={itemData.item === selectedCard ? {...styles.responseContainer, 
-                            borderColor : colors.primary, 
-                            alignItems : 'center',
-                            backgroundColor : colors.tertiaryFaded
-                        } : styles.responseContainer}>
-                        <Text style={constyles.genH3Text}>
-                            {itemData.item.text}
-                        </Text>
-                    </TouchableOpacity>
-                }
-                keyExtractor={itemData => itemData._id}
-            />
+        {props.responseList.map(response=>{
+            return <TouchableOpacity 
+                    onPress={() => setSelectedCard(response)}
+                    style={response === selectedCard ? {...styles.responseContainer, 
+                        borderColor : colors.primary, 
+                        alignItems : 'center',
+                        backgroundColor : colors.tertiaryFaded
+                    } : styles.responseContainer}>
+                    <Text style={constyles.genH3Text}>
+                        {response.text}
+                    </Text>
+                </TouchableOpacity>
+        })
+    }
+    
             {
                 selectedCard ? 
                 <View style={{flexDirection : 'row', width : '100%'}}>
