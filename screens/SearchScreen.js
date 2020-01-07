@@ -4,7 +4,6 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';   //
 import {PermissionsAndroid} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';  //
 
-
 const SearchScreen = props => {
 
   const [locNow, setLocNow] = useState();

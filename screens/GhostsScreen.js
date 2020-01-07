@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import TouchTile from '../components/touchTile';
 
 
@@ -9,7 +9,24 @@ const GhostsScreen = props => {
 
     }
 
-    return <View style={{flex : 1, justifyContent : 'center', alignItems : 'center'}}>
+    return <SafeAreaView style={{flex : 1, justifyContent : 'center', alignItems : 'center', paddingBottom : 6}}>
+      <ScrollView style={{flex : 1, width : '100%'}}>
+
+      <View style={{flexDirection : 'row', justifyContent : 'space-evenly'}}>
+      <TouchTile 
+        title="NEARBY" 
+        sizeChange={32}
+        fontSize={24}
+        onPress={() => {selectGhostType('NEARBY')}}
+      />
+      <TouchTile 
+        title="REQUESTS" 
+        sizeChange={32} 
+        cornerCount={0}
+        fontSize={24}
+        onPress={() => {selectGhostType('REQUESTS')}}
+      />
+    </View>
 
     <View style={{flexDirection : 'row', justifyContent : 'space-evenly'}}>
       <TouchTile 
@@ -28,21 +45,6 @@ const GhostsScreen = props => {
     </View>
 
     <View style={{flexDirection : 'row', justifyContent : 'space-evenly'}}>
-      <TouchTile 
-        title="WISPS"
-        sizeChange={32}
-        fontSize={24}
-        onPress={() => {selectGhostType('WISPS')}}
-        />
-      <TouchTile 
-        title="CHANNELS"
-        sizeChange={32}
-        fontSize={24}
-        onPress={() => {selectGhostType('CHANNELS')}}
-        />
-    </View>
-
-    <View style={{flexDirection : 'row', justifyContent : 'space-evenly'}}>
     <TouchTile 
         title="ESSENCES" 
         sizeChange={32}
@@ -56,11 +58,25 @@ const GhostsScreen = props => {
         fontSize={24}
         onPress={() => {selectGhostType('EIDOLA')}}
       />
-      
     </View>
-      
 
+    <View style={{flexDirection : 'row', justifyContent : 'space-evenly'}}>
+      <TouchTile 
+        title="WISPS"
+        sizeChange={32}
+        fontSize={24}
+        onPress={() => {selectGhostType('WISPS')}}
+        />
+      <TouchTile 
+        title="CHANNELS"
+        sizeChange={32}
+        fontSize={24}
+        onPress={() => {selectGhostType('CHANNELS')}}
+        />
     </View>
+      
+</ScrollView>
+    </SafeAreaView>
     
 }
 

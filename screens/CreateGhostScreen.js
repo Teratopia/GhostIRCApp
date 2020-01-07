@@ -70,7 +70,13 @@ const CreateGhostScreen = props => {
     return  <View style={{flex : 1, justifyContent : 'center', alignItems : 'center', margin : 12}}>
 
                 { ghostType ?
-                    <CreateGhostForm ghostType={ghostType}/>
+                    <CreateGhostForm 
+                        ghostType={ghostType}
+                        setGhostType={setGhostType}
+                        user={props.user}
+                        socket={props.socket}
+                        furtherScreenHistory={props.furtherScreenHistory}
+                    />
                 :
                     <CreateGhostOptionsList handleSelection={handleSelection}/>
                 }

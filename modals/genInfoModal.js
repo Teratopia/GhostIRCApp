@@ -15,7 +15,7 @@ const GenInfoModal = props => {
         <View style={styles.parentContainer}>
             {
                 props.headerText ?
-                <Text style={{...constyles.genH2Text, textAlign : 'center'}}>{props.headerText}</Text>
+                <Text style={{...constyles.genH2Text, ...props.headerTextStyle, textAlign : 'center'}}>{props.headerText}</Text>
                 : null
             }
             {
@@ -51,7 +51,7 @@ const GenInfoModal = props => {
                 null
             }
             <View style={{flexDirection : 'row', marginTop : 8}}>
-                <GenButton title="Close" onPress={props.onClose}/>
+                <GenButton title={props.closeTitle || "Close"} onPress={props.onClose}/>
                 {
                     props.secondButtonTitle && props.secondButtonOnPress ? 
                     props.activeSecondButton ?

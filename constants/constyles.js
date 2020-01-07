@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     },
     genH1Text : {
         fontSize : 68,
-        fontWeight : '800',
+        fontWeight : '700',
     },
     genH2Text : {
         fontSize : 48,
