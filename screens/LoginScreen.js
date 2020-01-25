@@ -53,7 +53,7 @@ const LoginScreen = props => {
         if(res.success){
           console.log('login success, res = ', res);
           props.setUser(res.user);
-          props.furtherScreenHistory('SEARCH');
+          props.setScreen('SEARCH');
         } else {
           console.log(res.message);
         }

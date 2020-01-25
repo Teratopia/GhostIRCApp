@@ -42,12 +42,12 @@ class App extends React.Component {
  constructor(props) {
   super(props);
   if(DeviceInfo.getSystemName() === 'Android'){
-    this.socket = io('http://10.0.2.2:3000', {jsonp : false});
+    this.socket = io('http://10.0.2.2:1212', {jsonp : false});
     this.socket.on('connect', () => {
     console.log('CONNECTION SUCCESSFUL');
     });
   } else {
-    this.socket = io('http://127.0.0.1:3000', {jsonp : false});
+    this.socket = io('http://127.0.0.1:1212', {jsonp : false});
     this.socket.on('connect', () => {
     console.log('CONNECTION SUCCESSFUL');
     });
