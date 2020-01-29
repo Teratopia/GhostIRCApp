@@ -24,17 +24,19 @@ class Header extends Component {
                             <FAIcon name='angle-left' size={20} color="white" />
                         </TouchableOpacity>
                         <Text style={styles.text}>{this.props.currentScreen}</Text>
-                        <TouchableOpacity onPress={()=>this.props.setScreen('GHOSTS')} style={styles.touchableStyle}>
+                        <TouchableOpacity onPress={()=>this.props.setModal('GHOSTS')} style={styles.touchableStyle}>
                             <FAIcon name='ellipsis-v' size={20} color="white" />
                         </TouchableOpacity>
                     </View>
+            case 'SELECTED_GHOST_CHAT_CARDS':
+            case 'SELECTED_GHOST_LOCATIONS':
             case 'SELECTED_GHOST':
                 return  <View style={{...styles.container, ...this.props.style}}>
-                            <TouchableOpacity onPress={()=>this.props.setScreen('GHOSTS')} style={styles.touchableStyle}>
+                            <TouchableOpacity onPress={this.props.currentScreen === 'SELECTED_GHOST' ?  ()=>this.props.setScreen('GHOSTS') : ()=>this.props.setScreen('SELECTED_GHOST') } style={styles.touchableStyle}>
                                 <FAIcon name='angle-left' size={20} color="white" />
                             </TouchableOpacity>
                             <Text style={styles.text}>{this.props.ghost.name}</Text>
-                            <TouchableOpacity onPress={()=>this.props.setScreen('GHOSTS')} style={styles.touchableStyle}>
+                            <TouchableOpacity onPress={()=>this.props.setModal('SELECTED_GHOST')} style={styles.touchableStyle}>
                                 <FAIcon name='ellipsis-v' size={20} color="white" />
                             </TouchableOpacity>
                         </View>

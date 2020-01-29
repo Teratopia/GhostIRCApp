@@ -18,14 +18,21 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Header from '../components/Header';
 import GhostsScreen from './GhostsScreen';
 import SelectedGhostScreen from './SelectedGhostScreen';
+import GhostSelectionModal from '../modals/GhostSelectionModal';
+import GhostsModal from '../modals/GhostsModal';
+import SelectedGhostLocationsScreen from './SelectedGhostLocationsScreen';
+import SelectedGhostChatCardsScreen from './SelectedGhostChatCardsScreen';
+
 
 class ScreenNavigation extends Component {
   constructor(props) {
     super(props);
     this.state = {
       currentScreen: 'LOGIN',
-      user : null,
-      selectedGhost : null
+      user: null,
+      selectedGhost: null,
+      modal : null,
+      latestGhostsList : null
     };
 
     this.setUser = this.setUser.bind(this);
@@ -34,9 +41,10 @@ class ScreenNavigation extends Component {
     this.resetGhost = this.resetGhost.bind(this);
     this.system = DeviceInfo.getSystemName();
     this.model = DeviceInfo.getModel();
+    this.setModal = this.setModal.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.props.socket.on('responseRequestAdded', this.resetGhost);
     this.props.socket.on('responseRoutedToExistingChatCard', this.resetGhost);
     this.props.socket.on('responseRated', this.resetGhost);
@@ -46,14 +54,14 @@ class ScreenNavigation extends Component {
     this.props.socket.on('chatCardDeleted', this.resetGhost);
   }
 
-  resetGhost(res){
+  resetGhost(res) {
     console.log('resetGhost res = ', res);
-      if(res.success){
-        this.setGhost(res.ghost);
-      }
+    if (res.success) {
+      this.setGhost(res.ghost);
+    }
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.props.socket.removeListener('responseRequestAdded');
     this.props.socket.removeListener('responseRoutedToExistingChatCard');
     this.props.socket.removeListener('responseRated');
@@ -63,25 +71,63 @@ class ScreenNavigation extends Component {
     this.props.socket.removeListener('chatCardDeleted');
   }
 
-  setUser(user){
+  setUser(user) {
     this.setState({
-      user : user
+      user: user
     });
   }
 
-  setScreen(screen){
+  setScreen(screen) {
+    console.log('setScreen screen = ', screen);
+    if (screen === 'SELECTED_GHOST'
+     || screen === 'SELECTED_GHOST_LOCATIONS'
+     || screen === 'SELECTED_GHOST_CHAT_CARDS') {
+      this.setState({
+        currentScreen: screen,
+        modal : null
+      })
+    } else {
+      this.setState({
+        selectedGhost: null,
+        modal : null,
+        currentScreen: screen
+      });
+    }
+  }
+
+  setGhost(ghost) {
     this.setState({
-      currentScreen : screen
+      selectedGhost: ghost
     });
   }
 
-  setGhost(ghost){
+  setModal(modal) {
     this.setState({
-      selectedGhost : ghost
+      modal: modal
     });
   }
 
   render() {
+    let modalView = null;
+    console.log('modalView 0');
+    switch (this.state.modal) {
+      case 'SELECTED_GHOST':
+        console.log('1');
+        modalView = <GhostSelectionModal
+          socket={this.props.socket}
+          ghost={this.state.selectedGhost}
+          setScreen={this.setScreen}
+          setModal={this.setModal}
+          user={this.state.user}
+        />
+        break
+      case 'GHOSTS':
+        console.log('1');
+        modalView = <GhostsModal
+          setModal={this.setModal}
+        />
+        break;
+    }
 
     let mainView = null;
     switch (this.state.currentScreen) {
@@ -98,28 +144,53 @@ class ScreenNavigation extends Component {
         console.log('2');
         mainView = <SearchScreen
           socket={this.props.socket}
-          //user={user}
-          //furtherScreenHistory={furtherScreenHistory}
+          setGhost={this.setGhost}
+          setScreen={this.setScreen}
+        //user={user}
+        //furtherScreenHistory={furtherScreenHistory}
         />
         break;
       case 'GHOSTS':
-          console.log('3');
-          mainView = <GhostsScreen
-            socket={this.props.socket}
-            user={this.state.user}
-            setGhost={this.setGhost}
-            setScreen={this.setScreen}
+        console.log('3');
+        mainView = <GhostsScreen
+          socket={this.props.socket}
+          user={this.state.user}
+          setGhost={this.setGhost}
+          setScreen={this.setScreen}
+          setLatestGhostsList={selection => this.setState({ latestGhostsList : selection})}
+          latestGhostsList={this.state.latestGhostsList}
+        />
+        break;
+      case 'SELECTED_GHOST':
+        console.log('4');
+        mainView = <SelectedGhostScreen
+          socket={this.props.socket}
+          user={this.state.user}
+          setGhost={this.setGhost}
+          ghost={this.state.selectedGhost}
+        />
+        break;
+      case 'SELECTED_GHOST_LOCATIONS':
+        console.log('5');
+        mainView = <SelectedGhostLocationsScreen
+        socket={this.props.socket}
+        user={this.state.user}
+        setGhost={this.setGhost}
+        ghost={this.state.selectedGhost}
+        setScreen={this.setScreen}
+        />
+        break;
+      case 'SELECTED_GHOST_CHAT_CARDS':
+         
+          console.log('6');
+          mainView = <SelectedGhostChatCardsScreen
+          socket={this.props.socket}
+          user={this.state.user}
+          chatCards={this.state.selectedGhost.chatCards}
+          setScreen={this.setScreen}
           />
-          break;
-          case 'SELECTED_GHOST':
-            console.log('4');
-            mainView = <SelectedGhostScreen
-              socket={this.props.socket}
-              user={this.state.user}
-              setGhost={this.setGhost}
-              ghost={this.state.selectedGhost}
-            />
-            break;
+
+        break;
       default:
         console.log('5');
         mainView = <LoginScreen
@@ -147,14 +218,16 @@ class ScreenNavigation extends Component {
           setScreen={this.setScreen}
           currentScreen={this.state.currentScreen}
           ghost={this.state.selectedGhost}
+          setModal={this.setModal}
         />
         {mainView}
+        {modalView}
         {this.model === 'iPhone 11' ? <View style={{ height: 36, backgroundColor: 'black' }} /> : null}
       </TouchableOpacity>
     }
 
   }
-} 
+}
 
 /*
 const ScreenNavigation = props => {

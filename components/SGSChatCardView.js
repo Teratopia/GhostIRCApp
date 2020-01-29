@@ -1,10 +1,11 @@
 import React, { useState, Component } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Keyboard } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import constyles from '../constants/constyles';
 import Icon from 'react-native-vector-icons/Entypo';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import Colors from '../constants/colors';
 import GhostsListViewRow from './GhostsListViewRow';
+import GenButton from './genButton';
 import moment from 'moment';
 
 class SGSChatCardView extends Component {
@@ -14,11 +15,14 @@ class SGSChatCardView extends Component {
             upvotes : 0,
             downvotes : 0,
             hasDownvoted : false,
-            hasUpvoted : false
+            hasUpvoted : false,
+            showModal : false,
+            confirmingDelete : false,
         };
         this.pressUpvote = this.pressUpvote.bind(this);
         this.pressDownvote = this.pressDownvote.bind(this);
         this.goForward = this.goForward.bind(this);
+        this.pressDelete = this.pressDelete.bind(this);
     }
 
     componentDidMount(){
@@ -56,6 +60,7 @@ class SGSChatCardView extends Component {
             isDownvote : false,
             ghostId : this.props.ghost._id
         });
+        this.setState({ showModal : false, confirmingDelete : false });
     }
 
     pressDownvote(){
@@ -66,6 +71,7 @@ class SGSChatCardView extends Component {
             isDownvote : true,
             ghostId : this.props.ghost._id
         });
+        this.setState({ showModal : false, confirmingDelete : false });
     }
 
     goForward(){
@@ -83,6 +89,16 @@ class SGSChatCardView extends Component {
                 this.props.onSelect(this.props.chatCard.responseRequests[0]);
             }
         }
+    }
+
+    pressDelete() {
+        this.props.socket.emit('deleteChatCard', {
+            userId : this.props.user._id,
+            chatCardId : this.props.chatCard._id,
+            ghostId : this.props.ghost._id
+        })
+        this.setState({ showModal : false, confirmingDelete : false });
+        this.props.onGoBack();
     }
 
 
@@ -157,11 +173,88 @@ class SGSChatCardView extends Component {
                             
 
                         <View style={{flexDirection : 'row', flex : 3, justifyContent : 'flex-end'}}>
-                            <FAIcon name='edit' size={20} color={Colors.secondary} style={styles.rowIcon}/>
-                            <FAIcon name='flag' size={20} color={Colors.secondary} style={styles.rowIcon}/>
-                            <FAIcon name='pen-nib' size={20} color={Colors.secondary} style={styles.rowIcon}/>
+                            { this.props.chatCard.bibliographyReferences.length > 0 ?
+                                <FAIcon name='pen-nib' size={20} color={Colors.secondary} style={styles.rowIcon}/>
+                            : null}
+                            { this.props.chatCard.chatCardFlags.length > 0 ?
+                                <FAIcon name='flag' size={20} color={Colors.secondary} style={styles.rowIcon}/>
+                            : null}
+                            <FAIcon name='ellipsis-v' onPress={()=>{this.setState({showModal : true})}} size={20} color={Colors.secondary} style={styles.rowIcon}/>
                         </View>
                     </View>
+
+                    <Modal
+                animationType="slide"
+                transparent={false}
+                visible={this.state.showModal}
+                onRequestClose={() => this.setState({showModal : false})}>
+                <View style={{marginTop: 22, flex : 1, justifyContent : 'center', alignItems : 'center', padding : 24}}>
+                    <View style={{flex : 1, justifyContent : 'center', alignItems : 'center'}}>
+                        <Text style={{...constyles.genH2Text, fontWeight : '200'}}>{this.props.chatCard.text}</Text>
+                    </View>
+                    
+                    <View style={{flex : 1, alignItems : 'center'}}>
+                    <Text style={constyles.genH6Text}>
+                        {moment(this.props.chatCard.createDate).format("MMM Do YYYY")}
+                    </Text>
+
+                    {   this.props.ghost.moderatorIds.includes(this.props.user._id) ||
+                        this.props.chatCard.creatorId === this.props.user._id ? 
+                        this.state.confirmingDelete ? 
+                        <View style={{flexDirection : 'row'}}>
+                            <View>
+                                <View style={{flexDirection : 'row'}}>
+                                    <GenButton
+                                        //style={this.state.hasUpvoted ? null : constyles.activeButton}
+                                        onPress={() => this.setState({ confirmingDelete : false})}
+                                        title="Cancel"
+                                    />
+                                    <GenButton
+                                        //style={constyles.activeButton}
+                                        onPress={this.pressDelete}
+                                        title="Delete"
+                                    />
+                                </View>
+                                <Text style={{...constyles.genH5Text, textAlign : 'center', marginBottom : 8}}>
+                                    Deleting a chat card detroys the pathways for all responses directed to it. This will change all responses directed to this chat card to requests. Are you sure you want to delete this chat card?
+                                </Text>
+                            </View>
+                        </View>
+                        :
+                        <View style={{flexDirection : 'row'}}>
+                            <GenButton
+                                onPress={() => this.setState({ confirmingDelete : true})}
+                                title="Delete"
+                            />
+                        </View>
+                    : null }
+
+                    <View style={{flexDirection : 'row'}}>
+                        <GenButton
+                            style={this.state.hasUpvoted ? constyles.activeButton : null}
+                            onPress={this.pressUpvote}
+                            title={this.state.hasUpvoted ? 'Remove Upvote' : 'Upvote'}
+                        />
+                    </View>
+
+                    <View style={{flexDirection : 'row'}}>
+                        <GenButton
+                            style={this.state.hasDownvoted ? constyles.activeButton : null}
+                            onPress={this.pressDownvote}
+                            title={this.state.hasDownvoted ? 'Remove Downvote' : 'Downvote'}
+                        />
+                    </View>
+
+                    <View style={{flexDirection : 'row'}}>
+                        <GenButton
+                            onPress={() => this.setState({showModal : false, confirmingDelete : false })}
+                            title="Close"
+                        />
+                    </View>
+                   </View>
+                </View>
+            </Modal>
+
             </View>
         } else {
             return null;

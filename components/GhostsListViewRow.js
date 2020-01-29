@@ -33,7 +33,7 @@ class GhostsListViewRow extends Component {
 
     componentWillUpdate(prevProps){
         if(this.props.ghost !== prevProps.ghost){
-            componentDidMount();
+            this.componentDidMount();
         }
     }
 

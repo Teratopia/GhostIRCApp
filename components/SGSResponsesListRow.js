@@ -72,26 +72,18 @@ class SGSResponsesListRow extends Component {
     }
 
     pressDelete(){
-
+        this.props.socket.emit('deleteResponse', {
+            userId : this.props.user._id,
+            responseId : this.props.response._id,
+            ghostId : this.props.ghost._id
+        });
     }
 
 
     render() {
         return <TouchableOpacity
             onPress={() => this.props.onPress(this.props.response)}
-            style={{
-                margin: 4,
-                marginHorizontal: 8,
-                borderRadius: 8,
-                borderWidth: 1,
-                borderColor: Colors.secondary,
-                padding: 4,
-                paddingHorizontal: 8,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-
-            }}>
+            style={this.props.response.ownerId && this.props.response.destinationCCId ? styles.responseContainer : styles.responseRequestContainer}>
             <Text style={{ ...constyles.genH3Text, fontWeight: '300' }}>
                 {this.props.response.text}
             </Text>
@@ -191,7 +183,32 @@ class SGSResponsesListRow extends Component {
 }
 
 const styles = StyleSheet.create({
+    responseContainer : {
+        margin: 4,
+        marginHorizontal: 8,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: Colors.secondary,
+        padding: 4,
+        paddingHorizontal: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
 
+    },
+    responseRequestContainer : {
+        margin: 4,
+        marginHorizontal: 8,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: Colors.secondary,
+        backgroundColor: Colors.secondaryFaded,
+        padding: 4,
+        paddingHorizontal: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    }
 });
 
 export default SGSResponsesListRow;

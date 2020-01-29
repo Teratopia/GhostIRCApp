@@ -9,6 +9,7 @@ import GhostsListView from '../components/GhostsListView';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import SGSChatCardView from '../components/SGSChatCardView';
 import SGSResponsesView from '../components/SGSResponsesView';
+import SGSCreateChatCardView from '../components/SGSCreateChatCardView';
 import moment from 'moment';
 
 
@@ -17,14 +18,27 @@ class SelectedGhostScreen extends Component {
     super(props);
     this.state = {
         selectedChatCard : null,
+        responseBeingHandled : null,
         chatCardHistory : []
     };
 
     this.onResponseSelection = this.onResponseSelection.bind(this);
     this.onGoBackInChatCardHistory = this.onGoBackInChatCardHistory.bind(this);
+    this.props.socket.on('chatCardCreated', res => {
+        console.log('chatCardCreated res = ', res);
+        //if(res.success){
+        //    this.setState({ responseBeingHandled : res.response });
+        //}
+        if(res.success){
+            this.setState({ responseBeingHandled : null });
+            this.props.setGhost(res.ghost);
+            this.onResponseSelection(res.response);
+        }
+    });
   }
 
   componentDidMount(){
+    console.log('selected ghost screen componentDidMount 0');
     if(this.props.ghost){
         console.log('this.state.selectedChatCard = ', this.state.selectedChatCard);
         if(!this.state.selectedChatCard){
@@ -35,9 +49,23 @@ class SelectedGhostScreen extends Component {
                 });
             }
         } else {
+            console.log('selected ghost screen componentDidMount 1');
             if(this.props.ghost.chatCards && this.props.ghost.chatCards.length > 0){
+                let ccId = this.state.selectedChatCard._id;
+                console.log('selected ghost screen componentDidMount 2');
+                /*
+                if(this.state.responseBeingHandled && this.state.responseBeingHandled.destinationCCId){
+                    console.log('selected ghost screen componentDidMount 3');
+                    ccId = this.state.responseBeingHandled.destinationCCId;
+                    this.setState({
+                        responseBeingHandled : null
+                    });
+                }
+                */
+                console.log('selected ghost screen componentDidMount 4 ccId = ', ccId);
                 for(let i = 0 ; i < this.props.ghost.chatCards.length ; i++){
-                    if(this.props.ghost.chatCards[i]._id === this.state.selectedChatCard._id){
+                    if(this.props.ghost.chatCards[i]._id === ccId){
+                        console.log('selected ghost screen componentDidMount 5');
                         this.setState({
                             selectedChatCard : this.props.ghost.chatCards[i]
                         });
@@ -66,7 +94,7 @@ class SelectedGhostScreen extends Component {
   }
 
   componentWillUnmount(){
-
+    this.props.socket.removeListener('chatCardCreated');
   }
 
   onResponseSelection(response){
@@ -77,9 +105,10 @@ class SelectedGhostScreen extends Component {
                 selectedChatCard : ccs[i],
                 chatCardHistory : [...this.state.chatCardHistory, ccs[i]]
             });
-            break;
+            return;
         }
     }
+    this.setState({responseBeingHandled : response});
   }
 
   onGoBackInChatCardHistory(){
@@ -138,24 +167,38 @@ class SelectedGhostScreen extends Component {
             </View>
         </View>
 
-    <SGSChatCardView
+{
+    this.state.responseBeingHandled ? 
+    <SGSCreateChatCardView
         socket={this.props.socket}
         ghost={this.props.ghost}
         user={this.props.user}
-        chatCard={this.state.selectedChatCard}
-        chatCardHistory={this.state.chatCardHistory}
-        onSelect={this.onResponseSelection}
-        onGoBack={this.onGoBackInChatCardHistory}
+        response={this.state.responseBeingHandled}
+        nullifyResponseBeingHandled={()=>this.setState({responseBeingHandled : null})}
     />
+    :
+    <View style={{flex : 1}}>
+        <SGSChatCardView
+            socket={this.props.socket}
+            ghost={this.props.ghost}
+            user={this.props.user}
+            chatCard={this.state.selectedChatCard}
+            chatCardHistory={this.state.chatCardHistory}
+            onSelect={this.onResponseSelection}
+            onGoBack={this.onGoBackInChatCardHistory}
+        />
+        <SGSResponsesView
+            socket={this.props.socket}
+            ghost={this.props.ghost}
+            user={this.props.user}
+            chatCard={this.state.selectedChatCard}
+            onSelect={this.onResponseSelection}
+            onGoBack={this.onGoBackInChatCardHistory}
+        />
+    </View>
+}
 
-    <SGSResponsesView
-        socket={this.props.socket}
-        ghost={this.props.ghost}
-        user={this.props.user}
-        chatCard={this.state.selectedChatCard}
-        onSelect={this.onResponseSelection}
-        onGoBack={this.onGoBackInChatCardHistory}
-    />
+    
 
             </View>
 

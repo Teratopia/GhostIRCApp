@@ -16,6 +16,7 @@ class SGSResponsesView extends Component {
         };
         this.selectResponse = this.selectResponse.bind(this);
         this.updateNewResponseText = this.updateNewResponseText.bind(this);
+        this.submitNewResponseText = this.submitNewResponseText.bind(this);
     }
 
     selectResponse(response){
@@ -25,6 +26,16 @@ class SGSResponsesView extends Component {
     updateNewResponseText(e){
         console.log('updateNewResponseText e = ', e);
         this.setState({ newResponseText : e });
+    }
+
+    submitNewResponseText(){
+        this.props.socket.emit('addResponseRequestToChatCard', {
+            originChatCardId : this.props.chatCard._id,
+            text : this.state.newResponseText,
+            userId : this.props.user._id,
+            ghostId : this.props.ghost._id
+        });
+        this.setState({ newResponseText : '' });
     }
 
 
@@ -37,6 +48,7 @@ class SGSResponsesView extends Component {
                         placeholder="Write Your Own Reply!"
                         returnKeyLabel="send"
                         onChangeText={this.updateNewResponseText}
+                        onSubmitEditing={this.submitNewResponseText}
                         value={this.state.newResponseText}
                         />
                     </View>
@@ -44,11 +56,11 @@ class SGSResponsesView extends Component {
                     <View style={{flexDirection : 'row', marginHorizontal : 4}}>
                         <GenButton
                             title="Cancel"
-                            onPress={()=>{}}
+                            onPress={()=>this.setState({ newResponseText : '' })}
                         />
                         <GenButton
                             title="Send"
-                            onPress={()=>{}}
+                            onPress={this.submitNewResponseText}
                             style={constyles.activeButton}
                         />
                     </View>
