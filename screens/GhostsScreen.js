@@ -8,7 +8,7 @@ import colors from '../constants/colors';
 //import AsyncStorage from '@react-native-community/async-storage';
 import { getStatusBarHeight } from 'react-native-status-bar-height';    //
 import GhostsListView from '../components/GhostsListView';
-
+import GenButton from '../components/genButton';
 
 class GhostsScreen extends Component {
   constructor(props) {
@@ -61,6 +61,7 @@ class GhostsScreen extends Component {
   componentWillUnmount(){
     this.props.socket.removeListener('getAllUserGhostInformationByUserId');
     this.props.socket.removeListener('getAllBefriendedGhostsForUser');
+    this.props.socket.removeListener('getAllNearbyGhosts');
   }
 
   async requestAndroidLocationPermissions() {
@@ -141,13 +142,18 @@ class GhostsScreen extends Component {
 
   render() {
 
+    console.log('ghostsScreen props.user = ', this.props.user);
+
     return <View style={{flex : 1}}>
-      <View style={constyles.genTextInputRowContainer}>
-        <TextInput
-          style={{...constyles.genTextInput}}
-          placeholder="Search Ghosts"
-        />
-      </View>
+      { this.props.showModal ? 
+        <View style={{...constyles.genTextInputRowContainer, marginTop : 0}}>
+          <TextInput
+            style={{...constyles.genTextInput}}
+            placeholder="Search Ghosts"
+          />
+        </View>
+      : <View style={{height : 4}}/> }
+      
       <View style={{flexDirection : 'row', borderRadius : 8, marginHorizontal : 8}}>
         <TouchableOpacity 
         onPress={()=>this.setGhostView('userGhosts')}
@@ -173,11 +179,22 @@ class GhostsScreen extends Component {
       </View>
 
     {this.state.userGhosts && this.state.ghostsSelection === 'userGhosts' ?
-      <GhostsListView
-        style={{marginTop : 4}}
-        ghosts={this.state.userGhosts}
-        onSelect={this.onGhostSelect}
-      />
+      <View style={{flex : 1}}>
+        <View style={{flexDirection : 'row', borderRadius : 8, marginHorizontal : 4, marginTop : 4}}>
+          <TouchableOpacity 
+            onPress={()=>this.setGhostView('userGhosts')}
+            style={{...constyles.activeButton, backgroundColor : colors.tertiary, borderRadius : 8, marginBottom : 0, padding : 4}}>
+            <Text style={styles.buttonText}>
+              Create Ghost
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <GhostsListView
+          style={{marginTop : 4}}
+          ghosts={this.state.userGhosts}
+          onSelect={this.onGhostSelect}
+        />
+      </View>
     : this.state.befriendedGhosts && this.state.ghostsSelection === 'friendlyGhosts' ?
       <GhostsListView
         style={{marginTop : 4}}

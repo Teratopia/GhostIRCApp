@@ -7,6 +7,7 @@ import Colors from '../constants/colors';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';   //
 import { PermissionsAndroid } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';  //
+import GhostSelectionModal from '../modals/GhostSelectionModal';
 import GenButton from '../components/genButton';
 
 class SelectedGhostChatCardsScreen extends Component {
@@ -17,6 +18,7 @@ class SelectedGhostChatCardsScreen extends Component {
             searchText : ''
         };
         this.pressRow = this.pressRow.bind(this);
+        this.jumpToChatCard = this.jumpToChatCard.bind(this);
     }
 
     componentDidMount() {
@@ -34,6 +36,13 @@ class SelectedGhostChatCardsScreen extends Component {
         this.setState({
             selectedChatCard : chatCard
         });
+    }
+
+    jumpToChatCard(){
+        if(this.state.selectedChatCard){
+            this.props.setJumpToChatCard(this.state.selectedChatCard);
+            this.props.setScreen('SELECTED_GHOST');
+        }
     }
 
 
@@ -66,8 +75,9 @@ class SelectedGhostChatCardsScreen extends Component {
                     <View style={{flexDirection : 'row', marginHorizontal : 4}}>
                         <GenButton
                             title="Jump To Card"
-                            onPress={()=>{}}
+                            onPress={this.jumpToChatCard}
                             style={constyles.activeButton}
+                            disabled={!this.state.selectedChatCard}
                         />
                     </View>
 
@@ -84,6 +94,15 @@ class SelectedGhostChatCardsScreen extends Component {
                         </TouchableOpacity>}
                     keyExtractor={chatCard => chatCard._id}
                 />
+                { this.props.showModal ? 
+            <GhostSelectionModal
+                socket={this.props.socket}
+                ghost={this.props.ghost}
+                setScreen={this.props.setScreen}
+                setShowModal={this.props.setShowModal}
+                user={this.props.user}
+                />
+            : null }
             </SafeAreaView>
         } else {
             return null;

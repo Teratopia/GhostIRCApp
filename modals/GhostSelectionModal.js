@@ -30,7 +30,7 @@ class GhostSelectionModal extends Component {
             ghostId : this.props.ghost._id,
             userId : this.props.user._id
         });
-        this.props.setModal(null);
+        this.props.setShowModal(false);
     }
 
     unfriendGhost(){
@@ -38,7 +38,7 @@ class GhostSelectionModal extends Component {
             ghostId : this.props.ghost._id,
             userId : this.props.user._id
         });
-        this.props.setModal(null);
+        this.props.setShowModal(false);
     }
 
     render() {
@@ -50,7 +50,7 @@ class GhostSelectionModal extends Component {
                 animationType="slide"
                 transparent={false}
                 visible={true}
-                onRequestClose={()=>this.props.setModal(null)}>
+                onRequestClose={()=>this.props.setShowModal(false)}>
                 <View style={{marginTop: 22, flex : 1, justifyContent : 'center', alignItems : 'center', padding : 24}}>
                     <View style={{flex : 1, justifyContent : 'center', alignItems : 'center', width : '100%'}}>
                         <Text style={{...constyles.genH2Text, textAlign : 'center', fontWeight : '200'}}>
@@ -109,7 +109,6 @@ class GhostSelectionModal extends Component {
                         </View>
                     </View>
                     <View style={{flex : 1, width : '100%'}}>
-                        <Text>FOO</Text>
                     <View style={{flexDirection : 'row'}}>
                         {
                             this.props.ghost.moderatorIds.includes(this.props.user._id) ?
@@ -130,14 +129,14 @@ class GhostSelectionModal extends Component {
                         <View style={{flexDirection : 'row'}}>
                             <GenButton
                                 title="Settings"
-                                style={constyles.activeButton}
-                                onPress={()=>this.props.setModal(null)}
+                                //style={constyles.activeButton}
+                                onPress={()=>this.props.setShowModal(false)}
                             />
                         </View>
                         <View style={{flexDirection : 'row'}}>
                             <GenButton
                                 title="Inbox"
-                                onPress={()=>this.props.setModal(null)}
+                                onPress={()=>this.props.setShowModal(false)}
                             />
                         </View>
                         <View style={{flexDirection : 'row'}}>
@@ -158,7 +157,7 @@ class GhostSelectionModal extends Component {
                         <View style={{flexDirection : 'row'}}>
                             <GenButton
                                 title="Close"
-                                onPress={()=>this.props.setModal(null)}
+                                onPress={()=>this.props.setShowModal(false)}
                             />
                         </View>
                     </View>

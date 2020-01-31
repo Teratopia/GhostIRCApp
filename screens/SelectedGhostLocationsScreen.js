@@ -8,6 +8,7 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';   //
 import {PermissionsAndroid} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';  //
 import GenButton from '../components/genButton';
+import GhostSelectionModal from '../modals/GhostSelectionModal';
 
 class SelectedGhostLocationsScreen extends Component {
     constructor(props) {
@@ -104,6 +105,15 @@ class SelectedGhostLocationsScreen extends Component {
                   })
               }
         </View>
+        { this.props.showModal ? 
+            <GhostSelectionModal
+            socket={this.props.socket}
+            ghost={this.props.ghost}
+            setScreen={this.props.setScreen}
+            setShowModal={this.props.setShowModal}
+            user={this.props.user}
+            />
+        : null }
       </View>
     }
 

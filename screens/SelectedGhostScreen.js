@@ -10,6 +10,7 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import SGSChatCardView from '../components/SGSChatCardView';
 import SGSResponsesView from '../components/SGSResponsesView';
 import SGSCreateChatCardView from '../components/SGSCreateChatCardView';
+import GhostSelectionModal from '../modals/GhostSelectionModal';
 import moment from 'moment';
 
 
@@ -41,7 +42,7 @@ class SelectedGhostScreen extends Component {
     console.log('selected ghost screen componentDidMount 0');
     if(this.props.ghost){
         console.log('this.state.selectedChatCard = ', this.state.selectedChatCard);
-        if(!this.state.selectedChatCard){
+        if(!this.state.selectedChatCard && !this.props.jumpToChatCard){
             if(this.props.ghost.baseChatCards && this.props.ghost.baseChatCards.length > 0){
                 this.setState({
                     selectedChatCard : this.props.ghost.baseChatCards[0],
@@ -51,7 +52,17 @@ class SelectedGhostScreen extends Component {
         } else {
             console.log('selected ghost screen componentDidMount 1');
             if(this.props.ghost.chatCards && this.props.ghost.chatCards.length > 0){
-                let ccId = this.state.selectedChatCard._id;
+                let ccId;
+                console.log('this.props.jumpToChatCard = ', this.props.jumpToChatCard);
+                if(this.state.selectedChatCard){
+                    ccId = this.state.selectedChatCard._id;
+                } else if(this.props.jumpToChatCard){
+                    this.setState({
+                        chatCardHistory : [this.props.ghost.baseChatCards[0], this.props.jumpToChatCard]
+                    });
+                    ccId = this.props.jumpToChatCard._id;
+                    this.props.setJumpToChatCard(null);
+                }
                 console.log('selected ghost screen componentDidMount 2');
                 /*
                 if(this.state.responseBeingHandled && this.state.responseBeingHandled.destinationCCId){
@@ -91,6 +102,10 @@ class SelectedGhostScreen extends Component {
         console.log('prevProps.ghost !== this.props.ghost');
         this.componentDidMount();
     }
+    if(this.props.jumpToChatCard && prevProps.jumpToChatCard !== this.props.jumpToChatCard){
+        this.setState({chatCard : this.props.jumpToChatCard});
+        this.props.setJumpToChatCard(null);
+    }
   }
 
   componentWillUnmount(){
@@ -108,7 +123,9 @@ class SelectedGhostScreen extends Component {
             return;
         }
     }
-    this.setState({responseBeingHandled : response});
+    if(this.props.ghost.moderatorIds.includes(this.props.user._id)){
+        this.setState({responseBeingHandled : response});
+    }
   }
 
   onGoBackInChatCardHistory(){
@@ -198,6 +215,15 @@ class SelectedGhostScreen extends Component {
     </View>
 }
 
+    { this.props.showModal ? 
+        <GhostSelectionModal
+          socket={this.props.socket}
+          ghost={this.props.ghost}
+          setScreen={this.props.setScreen}
+          setShowModal={this.props.setShowModal}
+          user={this.props.user}
+        />
+    : null }
     
 
             </View>

@@ -24,8 +24,8 @@ class Header extends Component {
                             <FAIcon name='angle-left' size={20} color="white" />
                         </TouchableOpacity>
                         <Text style={styles.text}>{this.props.currentScreen}</Text>
-                        <TouchableOpacity onPress={()=>this.props.setModal('GHOSTS')} style={styles.touchableStyle}>
-                            <FAIcon name='ellipsis-v' size={20} color="white" />
+                        <TouchableOpacity onPress={()=>this.props.setShowModal(!this.props.showModal)} style={styles.touchableStyle}>
+                            <FAIcon name='filter' size={16} color="white" />
                         </TouchableOpacity>
                     </View>
             case 'SELECTED_GHOST_CHAT_CARDS':
@@ -36,7 +36,7 @@ class Header extends Component {
                                 <FAIcon name='angle-left' size={20} color="white" />
                             </TouchableOpacity>
                             <Text style={styles.text}>{this.props.ghost.name}</Text>
-                            <TouchableOpacity onPress={()=>this.props.setModal('SELECTED_GHOST')} style={styles.touchableStyle}>
+                            <TouchableOpacity onPress={()=>this.props.setShowModal(true)} style={styles.touchableStyle}>
                                 <FAIcon name='ellipsis-v' size={20} color="white" />
                             </TouchableOpacity>
                         </View>
