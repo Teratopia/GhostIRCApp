@@ -26,6 +26,7 @@ class SGSResponsesList extends Component {
                         ghost={this.props.ghost}
                         onPress={this.props.onSelect}
                         response={response.item}
+                        selectedResponseId={this.props.selectedResponseId}
                     />
                 }
                 keyExtractor={response => response._id}

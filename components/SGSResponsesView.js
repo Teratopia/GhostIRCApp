@@ -98,7 +98,8 @@ class SGSResponsesView extends Component {
 {/*paste here*/}
                         <SGSResponsesList
                             socket={this.props.socket}
-                            onSelect={this.props.onSelect}
+                            onSelect={response=>this.setState({selectedResponse : response})}
+                            selectedResponseId={this.state.selectedResponse ? this.state.selectedResponse._id : null}
                             user={this.props.user}
                             responses={this.state.responsesList}
                             ghost={this.props.ghost}

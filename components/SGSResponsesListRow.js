@@ -83,7 +83,9 @@ class SGSResponsesListRow extends Component {
     render() {
         return <TouchableOpacity
             onPress={() => this.props.onPress(this.props.response)}
-            style={this.props.response.ownerId && this.props.response.destinationCCId ? styles.responseContainer : styles.responseRequestContainer}>
+            style={this.props.selectedResponseId === this.props.response._id ?
+                {...styles.responseContainer, backgroundColor : Colors.tertiaryFaded} :
+                this.props.response.ownerId && this.props.response.destinationCCId ? styles.responseContainer : styles.responseRequestContainer}>
             <Text style={{ ...constyles.genH3Text, fontWeight: '300' }}>
                 {this.props.response.text}
             </Text>

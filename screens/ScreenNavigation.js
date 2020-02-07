@@ -39,6 +39,7 @@ class ScreenNavigation extends Component {
     this.setScreen = this.setScreen.bind(this);
     this.setGhost = this.setGhost.bind(this);
     this.resetGhost = this.resetGhost.bind(this);
+    this.navigateToChatCard = this.navigateToChatCard.bind(this);
     this.system = DeviceInfo.getSystemName();
     this.model = DeviceInfo.getModel();
   }
@@ -114,6 +115,14 @@ class ScreenNavigation extends Component {
   setGhost(ghost) {
     this.setState({
       selectedGhost: ghost
+    });
+  }
+
+  navigateToChatCard(ghost, chatCard){
+    this.setState({
+      selectedGhost : ghost,
+      jumpToChatCard : chatCard,
+      currentScreen: 'SELECTED_GHOST',
     });
   }
 
@@ -213,6 +222,7 @@ class ScreenNavigation extends Component {
             setShowModal={bool => this.setState({showModal : bool})}
             showModal={this.state.showModal}
             setUser={this.setUser}
+            navigateToChatCard={this.navigateToChatCard}
           />
           break;
       default:
@@ -246,7 +256,7 @@ class ScreenNavigation extends Component {
           showModal={this.state.showModal}
         />
         {mainView}
-        {this.model === 'iPhone 11' ? <View style={{ height: 36, backgroundColor: 'black' }} /> : null}
+        {this.model === 'iPhone 11' ? <View style={styles.iPhone11FooterBar} /> : null}
       </TouchableOpacity>
     }
 
@@ -380,6 +390,10 @@ const styles = StyleSheet.create({
   androidScreen: {
     flex: 1,
   },
+  iPhone11FooterBar : { 
+    height: getStatusBarHeight(), 
+    backgroundColor: 'black' 
+  }
 
 });
 
