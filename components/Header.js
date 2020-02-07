@@ -40,9 +40,27 @@ class Header extends Component {
                                 <FAIcon name='ellipsis-v' size={20} color="white" />
                             </TouchableOpacity>
                         </View>
+            case 'USER_PROFILE':
+                return  <View style={{...styles.container, ...this.props.style}}>
+                            <TouchableOpacity onPress={()=>{}} style={styles.touchableStyle}>
+                                <FAIcon name='cog' size={20} color="white" />
+                            </TouchableOpacity>
+                            <Text style={styles.text}>PROFILE</Text>
+                            <TouchableOpacity onPress={()=>this.props.setScreen('SEARCH')} style={styles.touchableStyle}>
+                                <FAIcon name='angle-right' size={20} color="white" />
+                            </TouchableOpacity>
+                        </View>
+            case 'CREATE_GHOST':
+                return  <View style={{...styles.container, ...this.props.style}}>
+                            <TouchableOpacity onPress={()=>this.props.setScreen('GHOSTS')} style={styles.touchableStyle}>
+                                <FAIcon name='angle-left' size={20} color="white" />
+                            </TouchableOpacity>
+                            <Text style={styles.text}>CREATE GHOST</Text>
+                            <View style={{width : 20}}/>
+                        </View>
         default:
             return  <View style={{...styles.container, ...this.props.style}}>
-                        <TouchableOpacity onPress={()=>this.props.setScreen('PROFILE')} style={styles.touchableStyle}>
+                        <TouchableOpacity onPress={()=>this.props.setScreen('USER_PROFILE')} style={styles.touchableStyle}>
                             <FAIcon name='user-circle' size={20} color="white" />
                         </TouchableOpacity>
                         <Text style={styles.text}>{this.props.currentScreen}</Text>

@@ -20,6 +20,7 @@ import GhostsScreen from './GhostsScreen';
 import SelectedGhostScreen from './SelectedGhostScreen';
 import SelectedGhostLocationsScreen from './SelectedGhostLocationsScreen';
 import SelectedGhostChatCardsScreen from './SelectedGhostChatCardsScreen';
+import UserProfileScreen from './UserProfileScreen';
 
 
 class ScreenNavigation extends Component {
@@ -50,6 +51,11 @@ class ScreenNavigation extends Component {
     this.props.socket.on('ghostRated', this.resetGhost);
     this.props.socket.on('responseDeleted', this.resetGhost);
     this.props.socket.on('chatCardDeleted', this.resetGhost);
+    this.props.socket.on('chatCardEdited', this.resetGhost);
+    this.props.socket.on('ghostStatusUpdated', this.resetGhost);
+    this.props.socket.on('chatCardFlagCreated', this.resetGhost);
+    this.props.socket.on('chatCardDeleted', this.resetGhost);
+    this.props.socket.on('chatCardStatusUpdated', this.resetGhost);
     this.props.socket.on('updateUser', res => {
       console.log('updateUser res = ', res);
       if(res.success){
@@ -74,6 +80,11 @@ class ScreenNavigation extends Component {
     this.props.socket.removeListener('responseDeleted');
     this.props.socket.removeListener('chatCardDeleted');
     this.props.socket.removeListener('updateUser');
+    this.props.socket.removeListener('chatCardEdited');
+    this.props.socket.removeListener('ghostStatusUpdated');
+    this.props.socket.removeListener('chatCardFlagCreated');
+    this.props.socket.removeListener('chatCardDeleted');
+    this.props.socket.removeListener('chatCardStatusUpdated');
   }
 
   setUser(user) {
@@ -184,6 +195,26 @@ class ScreenNavigation extends Component {
           />
 
         break;
+      case 'CREATE_GHOST':
+        mainView = <CreateGhostScreen
+          socket={this.props.socket}
+          user={this.state.user}
+          ghost={this.state.selectedGhost}
+          setScreen={this.setScreen}
+          setShowModal={bool => this.setState({showModal : bool})}
+          showModal={this.state.showModal}
+        />
+        break;
+      case 'USER_PROFILE':
+          mainView = <UserProfileScreen
+            socket={this.props.socket}
+            user={this.state.user}
+            setScreen={this.setScreen}
+            setShowModal={bool => this.setState({showModal : bool})}
+            showModal={this.state.showModal}
+            setUser={this.setUser}
+          />
+          break;
       default:
         console.log('5');
         mainView = <LoginScreen

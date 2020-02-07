@@ -7,8 +7,8 @@ const CreateGhostOptionCard = props => {
 
     return  <TouchableOpacity 
                 onPress={()=>{props.handleSelection(props.name)}}
-                style={{ flexDirection : 'row' }}>
-                <View style={styles.ghostTypeContainer}>
+                style={{flexDirection : 'row' }}>
+                <View style={{ ...styles.ghostTypeContainer, ...props.style }}>
                     <Text style={styles.ghostTypeHeader}>{props.name}</Text>
                     <Text style={styles.ghostTypeSubHeader}>{props.cost}</Text>
                     <View style={{width : '80%', height : 1, backgroundColor : 'white'}}/>
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
         justifyContent : 'center',
         alignItems : 'center',
         backgroundColor : colors.secondary,
-        padding : 8
+        padding : 12
     },
     ghostTypeHeader : {
         ...constyles.genH3Text, 

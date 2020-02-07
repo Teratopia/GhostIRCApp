@@ -15,6 +15,7 @@ class GhostSelectionModal extends Component {
         };
         this.befriendGhost = this.befriendGhost.bind(this);
         this.unfriendGhost = this.unfriendGhost.bind(this);
+        this.updateGhostStatus = this.updateGhostStatus.bind(this);
     }
 
     componentDidMount(){
@@ -37,6 +38,14 @@ class GhostSelectionModal extends Component {
         this.props.socket.emit('unfriendGhost', {
             ghostId : this.props.ghost._id,
             userId : this.props.user._id
+        });
+        this.props.setShowModal(false);
+    }
+
+    updateGhostStatus(status){
+        this.props.socket.emit('updateGhostStatus', {
+            ghostId : this.props.ghost._id,
+            status : status
         });
         this.props.setShowModal(false);
     }
@@ -112,7 +121,23 @@ class GhostSelectionModal extends Component {
                     <View style={{flexDirection : 'row'}}>
                         {
                             this.props.ghost.moderatorIds.includes(this.props.user._id) ?
-                            null :
+                            <View style={{flex : 1, width : '100%'}}>
+                                <View style={{flexDirection : 'row'}}>
+                                    <GenButton
+                                        title={this.props.ghost.status === 'RESTED' ? "Awaken Ghost" : "Rest Ghost"}
+                                        style={this.props.ghost.status === 'RESTED' ? constyles.activeButton : constyles.inactiveButton}
+                                        onPress={this.props.ghost.status === 'RESTED' ? ()=>this.updateGhostStatus(null) : ()=>this.updateGhostStatus('RESTED')}
+                                    />
+                                </View>
+                                <View style={{flexDirection : 'row'}}>
+                                    <GenButton
+                                        title={this.props.ghost.status === 'SILENCED' ? "Unsilence Ghost" : "Silence Ghost"}
+                                        style={this.props.ghost.status === 'SILENCED' ? constyles.activeButton : constyles.inactiveButton}
+                                        onPress={this.props.ghost.status === 'SILENCED' ? ()=>this.updateGhostStatus(null) : ()=>this.updateGhostStatus('SILENCED')}
+                                    />
+                                </View>
+                            </View>
+                            :
                             this.props.user.ghostFriendIds.includes(this.props.ghost._id) ? 
                             <GenButton
                                 title="Unfriend Ghost"
@@ -126,19 +151,7 @@ class GhostSelectionModal extends Component {
                             />
                         }        
                         </View>
-                        <View style={{flexDirection : 'row'}}>
-                            <GenButton
-                                title="Settings"
-                                //style={constyles.activeButton}
-                                onPress={()=>this.props.setShowModal(false)}
-                            />
-                        </View>
-                        <View style={{flexDirection : 'row'}}>
-                            <GenButton
-                                title="Inbox"
-                                onPress={()=>this.props.setShowModal(false)}
-                            />
-                        </View>
+                        
                         <View style={{flexDirection : 'row'}}>
                             <GenButton
                                 title="Chat Cards"

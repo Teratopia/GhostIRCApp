@@ -7,25 +7,54 @@ import Colors from '../constants/colors';
 import GhostsListViewRow from './GhostsListViewRow';
 import SGSResponsesList from './SGSResponsesList';
 import GenButton from './genButton';
+import stringSimilarity from 'string-similarity';
+
 
 class SGSResponsesView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            newResponseText : ''
+            newResponseText : '',
+            responsesList : []
         };
         this.selectResponse = this.selectResponse.bind(this);
         this.updateNewResponseText = this.updateNewResponseText.bind(this);
         this.submitNewResponseText = this.submitNewResponseText.bind(this);
     }
 
+    componentDidMount(){
+        if(this.props.chatCard){
+            this.setState({responsesList : [...this.props.chatCard.responseRequests, ...this.props.chatCard.responses]});
+        }
+    }
+
+    componentDidUpdate(prevProps){
+        console.log('SGSResponsesView prevProps = ', prevProps);
+        console.log('SGSResponsesView this.props = ', this.props);
+        if((!prevProps.chatCard && this.props.chatCard) || 
+            (prevProps.chatCard && this.props.chatCard && 
+            (prevProps.chatCard.responses !== this.props.chatCard.responses ||
+            prevProps.chatCard.responseRequests !== this.props.chatCard.responseRequests))){
+            this.componentDidMount();
+        }
+    }
+
     selectResponse(response){
         console.log('response = ', response);
     }
 
-    updateNewResponseText(e){
-        console.log('updateNewResponseText e = ', e);
-        this.setState({ newResponseText : e });
+    updateNewResponseText(filterString){
+        console.log('updateNewResponseText filterString = ', filterString);
+        let responsesClone = [...this.state.responsesList];
+        responsesClone.sort((a, b) => {
+            console.log('sort a = ', a.text);
+            console.log('stringSimilarity.compareTwoStrings(a, filterString) = ', stringSimilarity.compareTwoStrings(a.text, filterString));
+            console.log('sort b = ', b.text);
+            console.log('stringSimilarity.compareTwoStrings(b, filterString) = ', stringSimilarity.compareTwoStrings(b.text, filterString));
+
+            return stringSimilarity.compareTwoStrings(b.text, filterString) - stringSimilarity.compareTwoStrings(a.text, filterString);
+        });
+        this.setState({ newResponseText : filterString, responsesList : responsesClone });
     }
 
     submitNewResponseText(){
@@ -65,7 +94,34 @@ class SGSResponsesView extends Component {
                         />
                     </View>
                     : null }
-                    { this.props.ghost.moderatorIds.includes(this.props.user._id) ?
+                    
+{/*paste here*/}
+                        <SGSResponsesList
+                            socket={this.props.socket}
+                            onSelect={this.props.onSelect}
+                            user={this.props.user}
+                            responses={this.state.responsesList}
+                            ghost={this.props.ghost}
+                        />
+                    
+                </View>
+        } else {
+            return null;
+        }
+    }
+
+}
+
+const styles = StyleSheet.create({
+
+});
+
+export default SGSResponsesView;
+
+/*
+copy here:
+
+{ this.props.ghost.moderatorIds.includes(this.props.user._id) ?
                         <SGSResponsesList
                             socket={this.props.socket}
                             onSelect={this.props.onSelect}
@@ -90,17 +146,4 @@ class SGSResponsesView extends Component {
                             ghost={this.props.ghost}
                         />
                     : null }
-                    
-                </View>
-        } else {
-            return null;
-        }
-    }
-
-}
-
-const styles = StyleSheet.create({
-
-});
-
-export default SGSResponsesView;
+*/

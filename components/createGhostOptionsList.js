@@ -11,6 +11,7 @@ const CreateGhostOptionsList = props => {
                 
                 <CreateGhostOptionCard 
                     handleSelection={props.handleSelection}
+                    style={{backgroundColor : colors.primary}}
                     name={"SPRITE"}
                     cost={"Cost: 100 Ecto"}
                     bodyText={"Sprites are the most common ghosts. They typically appear in one location but they can inhabit many. People can speak with a befriended Sprite from anywhere and can view them on the map, unless they are Shaded."}
@@ -25,7 +26,7 @@ const CreateGhostOptionsList = props => {
                     handleSelection={props.handleSelection}
                     name={"CHANNEL"}
                     cost={"Cost: 1000+ Ecto"}
-                    bodyText={"Channels are not ghosts, per se, more like conduits for interacting with others. Visible on the map unless they are shaded, you may only contribute to a channel when within its radius. The Ecto cost of a channel varies by its diamater."}
+                    bodyText={"Channels are not ghosts, per se, more like conduits for interacting with others. Visible on the map unless they are shaded, you may only contribute to a channel when within its radius. The Ecto cost of a channel varies by its diameter."}
                 /> 
                 <CreateGhostOptionCard 
                     handleSelection={props.handleSelection}
@@ -37,13 +38,13 @@ const CreateGhostOptionsList = props => {
                     handleSelection={props.handleSelection}
                     name={"EIDOLON"}
                     cost={"Cost: 10,000 Ecto"}
-                    bodyText={"Creating an Eidolon is a difficult and venerable task that should not be taken lightly. An Eidolon is akin to a Sprite, but with an important distinction: Eidola represent real figures from history."}
+                    bodyText={"Creating an Eidolon is a difficult and venerable task that should not be undertaken lightly. An Eidolon is akin to a Sprite, but with an important distinction: Eidola represent real figures from history."}
                 /> 
                 <CreateGhostOptionCard 
                     handleSelection={props.handleSelection}
                     name={"ESSENCE"}
                     cost={"Cost: 10,000 Ecto"}
-                    bodyText={"Creating an Essence is a difficult and venerable task that should not be taken lightly. An Essence is akin to a Sprite, but with an important distinction: Essences represent real life entities."}
+                    bodyText={"Creating an Essence is a difficult and venerable task that should not be undertaken lightly. An Essence is akin to a Sprite, but with an important distinction: Essences represent real life entities."}
                 /> 
 
             </ScrollView>

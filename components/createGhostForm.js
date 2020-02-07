@@ -14,8 +14,13 @@ const CreateGhostForm = props => {
     const [nameInput, setNameInput] = useState();
     const [chatCardText, setChatCardText] = useState();
     const [modalView, setModalView] = useState();
+    const [ghostType, setGhostType] = useState(props.ghostType.charAt(0) + props.ghostType.toLowerCase().slice(1));
 
     function postGhost(){
+            if(props.ghostType === "SPRITE"){
+              createSprite();
+            }
+            /*
             var sendType = props.ghostType === "Will-O'-THE-WISP" ? 'WISP' : props.ghostType;
             Geolocation.getCurrentPosition(position => {
               console.log('postGhost position = ', position);
@@ -29,10 +34,37 @@ const CreateGhostForm = props => {
                   longitude: position.coords.longitude,
                 });
                 props.setGhostType(null);
-                props.furtherScreenHistory('MY GHOSTS');
+                props.setScreen('GHOSTS');
               }
             });
-            
+            */
+    }
+
+    function createSprite(){
+      Geolocation.getCurrentPosition(position => {
+        console.log('createSprite position = ', position);
+        console.log('createSprite nameInput = ', nameInput);
+        console.log('createSprite setChatCardText = ', setChatCardText);
+        if(nameInput && setChatCardText){
+          console.log('if createSprite req = ', {
+            userId : props.user._id,
+            name : nameInput,
+            type : 'SPRITE',
+            chatCardText : chatCardText,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+          props.socket.emit('createSprite', {
+            userId : props.user._id,
+            name : nameInput,
+            type : 'SPRITE',
+            chatCardText : chatCardText,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+          props.setGhostType(null);
+        }
+      });
     }
 
     function createButtonHandler(){
@@ -95,25 +127,28 @@ const CreateGhostForm = props => {
 
     async function attachSocketListeners(){
       console.log('attachSocketListeners 1');
-      props.socket.removeListener('createGhost');
-      props.socket.on('createGhost', res => {
-          console.log('createGhost, res = ', res);
+      props.socket.removeListener('createSprite');
+      props.socket.on('createSprite', res => {
+          props.setScreen('GHOSTS');
+          console.log('createSprite, res = ', res);
       });
     }
 
     attachSocketListeners();
 
-    return  <KeyboardAvoidingView style={{flex : 1, justifyContent : 'center', alignItems : 'center', margin : 12}}>
-              <Text style={{...constyles.genH3Text, color : colors.primary}}>
+    return  <KeyboardAvoidingView style={{flex : 1, justifyContent : 'center', alignItems : 'center', margin : 12, marginTop : 0}}>
+
+              {/*<Text style={{...constyles.genH3Text, color : colors.primary}}>
                 {props.ghostType === 'EIDOLON' || props.ghostType === 'ESSENCE' ? 'MAKE AN '+props.ghostType+'!' : 'MAKE A '+props.ghostType+'!'}
-              </Text>
+  </Text>*/}
+
               <Text style={{...constyles.genH5Text, color : colors.secondary}}>
-                Name
+                {ghostType+' Name'}
               </Text>
               <View style={{flexDirection : 'row', marginBottom : 12}}>
                 <TextInput style={constyles.genTextInput}
                     placeholder='e.g. Casper'
-                    onSubmitEditing={(e) => {setNameInput(e.nativeEvent.text)}}
+                    onChangeText={(e) => {setNameInput(e)}}
                     returnKeyLabel="done"
                 />
               </View>
@@ -122,9 +157,9 @@ const CreateGhostForm = props => {
                 Starting Chat Card
               </Text>
               <View style={{flexDirection : 'row', flex : 1, marginBottom : 12}}>
-                <TextInput style={{...constyles.genTextInput, textAlign : 'auto', textAlignVertical : 'top', justifyContent : 'flex-start'}}
+                <TextInput style={{...constyles.genTextInput, textAlign : 'auto', textAlignVertical : 'top', justifyContent : 'flex-start', paddingTop : 12, padding : 12}}
                     placeholder="e.g. Hi there! I'm Casper the friendly ghost!"
-                    onBlur={(e) => {setChatCardText(e.nativeEvent.text)}}
+                    onChangeText={(e) => {setChatCardText(e)}}
                     multiline={true}
                 />
               </View>

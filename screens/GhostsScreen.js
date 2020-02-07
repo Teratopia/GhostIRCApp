@@ -17,12 +17,18 @@ class GhostsScreen extends Component {
       ghostsSelection : this.props.latestGhostsList || 'userGhosts',
       userGhosts : [],
       befriendedGhosts : [],
+      restedGhosts : [],
+      silencedGhosts : [],
+      isViewingRestedGhosts : false,
+      isViewingSilencedGhosts : true,
       locationNow : null
     };
     this.onGhostSelect = this.onGhostSelect.bind(this);
     this.setGhostView = this.setGhostView.bind(this);
     this.requestAndroidLocationPermissions = this.requestAndroidLocationPermissions.bind(this);
     this.establishLocation = this.establishLocation.bind(this);
+    this.viewSilencedGhosts = this.viewSilencedGhosts.bind(this);
+    this.viewRestedGhosts = this.viewRestedGhosts.bind(this);
   }
 
   onGhostSelect(ghost){
@@ -55,13 +61,37 @@ class GhostsScreen extends Component {
         });
       }
     });
+    this.props.socket.on('getAllUserRestedGhostInformationByUserId', res => {
+      console.log('getAllUserRestedGhostInformationByUserId res = ', res);
+      if(res.success){
+        this.setState({
+          restedGhosts : res.ghosts
+        });
+      }
+    });
+    this.props.socket.on('getAllUserSilencedGhostInformationByUserId', res => {
+      console.log('getAllUserSilencedGhostInformationByUserId res = ', res);
+      if(res.success){
+        this.setState({
+          silencedGhosts : res.ghosts
+        });
+      }
+    });
     this.setGhostView(this.state.ghostsSelection);
+  }
+
+  componentDidUpdate(prevProps){
+    if(this.props.ghost && this.props.ghost.status && this.props.ghost !== prevProps.ghost){
+      this.setGhostView(this.state.ghostsSelection);
+    }
   }
 
   componentWillUnmount(){
     this.props.socket.removeListener('getAllUserGhostInformationByUserId');
     this.props.socket.removeListener('getAllBefriendedGhostsForUser');
     this.props.socket.removeListener('getAllNearbyGhosts');
+    this.props.socket.removeListener('getAllUserRestedGhostInformationByUserId');
+    this.props.socket.removeListener('getAllUserSilencedGhostInformationByUserId');
   }
 
   async requestAndroidLocationPermissions() {
@@ -133,11 +163,32 @@ class GhostsScreen extends Component {
       this.props.socket.emit('getAllUserGhostInformationByUserId', {
         userId : this.props.user._id
       });
+      this.props.socket.emit('getAllUserSilencedGhostInformationByUserId', {
+        userId : this.props.user._id
+      });
     }
     this.props.setLatestGhostsList(ghostsSelection);
     this.setState({
       ghostsSelection : ghostsSelection
     });
+  }
+
+  viewRestedGhosts(){
+    this.setState({isViewingRestedGhosts : !this.state.isViewingRestedGhosts});
+    if(this.state.restedGhosts.length === 0){
+      this.props.socket.emit('getAllUserRestedGhostInformationByUserId', {
+        userId : this.props.user._id
+      });
+    }
+  }
+
+  viewSilencedGhosts(){
+    this.setState({isViewingSilencedGhosts : !this.state.isViewingSilencedGhosts});
+    if(this.state.silencedGhosts.length === 0){
+      this.props.socket.emit('getAllUserSilencedGhostInformationByUserId', {
+        userId : this.props.user._id
+      });
+    }
   }
 
   render() {
@@ -146,11 +197,28 @@ class GhostsScreen extends Component {
 
     return <View style={{flex : 1}}>
       { this.props.showModal ? 
-        <View style={{...constyles.genTextInputRowContainer, marginTop : 0}}>
-          <TextInput
-            style={{...constyles.genTextInput}}
-            placeholder="Search Ghosts"
-          />
+        <View>
+          <Text style={{...constyles.genH5Text, textAlign : 'center'}}>
+            Include
+          </Text>
+          <View style={{flexDirection : 'row', marginHorizontal : 4}}>
+            <GenButton
+              title="RESTED"
+              onPress={this.viewRestedGhosts}
+              style={this.state.isViewingRestedGhosts ? constyles.activeButton : constyles.inactiveButton}
+              />
+            <GenButton
+              title="SILENCED"
+              onPress={this.viewSilencedGhosts}
+              style={this.state.isViewingSilencedGhosts ? constyles.activeButton : constyles.inactiveButton}
+              />
+          </View>
+          <View style={{...constyles.genTextInputRowContainer, marginTop : 0}}>
+            <TextInput
+              style={{...constyles.genTextInput}}
+              placeholder="Search Ghosts"
+            />
+          </View>
         </View>
       : <View style={{height : 4}}/> }
       
@@ -182,7 +250,7 @@ class GhostsScreen extends Component {
       <View style={{flex : 1}}>
         <View style={{flexDirection : 'row', borderRadius : 8, marginHorizontal : 4, marginTop : 4}}>
           <TouchableOpacity 
-            onPress={()=>this.setGhostView('userGhosts')}
+            onPress={()=>this.props.setScreen('CREATE_GHOST')}
             style={{...constyles.activeButton, backgroundColor : colors.tertiary, borderRadius : 8, marginBottom : 0, padding : 4}}>
             <Text style={styles.buttonText}>
               Create Ghost
@@ -194,6 +262,21 @@ class GhostsScreen extends Component {
           ghosts={this.state.userGhosts}
           onSelect={this.onGhostSelect}
         />
+        { this.state.isViewingRestedGhosts ? 
+          <GhostsListView
+            //style={{marginTop : 4}}
+            ghosts={this.state.restedGhosts}
+            onSelect={this.onGhostSelect}
+          />
+        : null }
+        { this.state.isViewingSilencedGhosts ? 
+          <GhostsListView
+            //style={{marginTop : 4}}
+            ghosts={this.state.silencedGhosts}
+            onSelect={this.onGhostSelect}
+          />
+        : null }
+        
       </View>
     : this.state.befriendedGhosts && this.state.ghostsSelection === 'friendlyGhosts' ?
       <GhostsListView

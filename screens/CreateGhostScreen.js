@@ -16,6 +16,21 @@ const CreateGhostScreen = props => {
     const [ghostType, setGhostType] = useState();
 
     function handleSelection(selection){
+        if(selection !== 'SPRITE'){
+            setModalView(<GenInfoModal 
+                headerText={selection === "WILL-O'-THE-WISP" ? "WISP" : selection}
+                subheaderText="Ghost type coming soon!"
+                bodyTextArray={[
+                    "Check back again later to create a ghost of this type!",
+                    "Updates are quick and ongoing, we look forward to seeing your new ghost soon. "
+                    
+                ]}
+                onClose={() => {setModalView(null)}}
+            />);
+        } else {
+            setGhostType(selection);
+        }
+        /*
         if(selection === 'EIDOLON'){
             setModalView(<GenInfoModal 
                 headerText="EIDOLON"
@@ -38,7 +53,6 @@ const CreateGhostScreen = props => {
                 }}
                 activeSecondButton={true}
             />);
-            return;
         }
         if(selection === 'ESSENCE'){
             setModalView(<GenInfoModal 
@@ -62,9 +76,9 @@ const CreateGhostScreen = props => {
                 }}
                 activeSecondButton={true}
             />);
-            return;
         }
-        setGhostType(selection);
+        */
+        //setGhostType(selection);
     }
 
     return  <View style={{flex : 1, justifyContent : 'center', alignItems : 'center', margin : 12}}>
@@ -75,7 +89,7 @@ const CreateGhostScreen = props => {
                         setGhostType={setGhostType}
                         user={props.user}
                         socket={props.socket}
-                        furtherScreenHistory={props.furtherScreenHistory}
+                        setScreen={props.setScreen}
                     />
                 :
                     <CreateGhostOptionsList handleSelection={handleSelection}/>

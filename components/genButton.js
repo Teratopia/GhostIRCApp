@@ -7,6 +7,7 @@ const GenButton = props => {
 
     return <TouchableOpacity 
         onPress={props.onPress}
+        disabled={props.disabled}
         style={{...constyles.inactiveButton, ...props.style}}>
             <Text style={{...styles.defaultText, ...props.textStyle}}>{props.title}</Text>
         </TouchableOpacity>

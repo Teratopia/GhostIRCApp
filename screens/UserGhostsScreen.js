@@ -38,7 +38,7 @@ const UserGhostsScreen = props => {
           :
           <View style={{flex : 1, justifyContent : 'center', alignItems : 'center', width : '100%'}}>
               <TouchableOpacity 
-                onPress={()=>{props.furtherScreenHistory("CREATE GHOST")}}
+                onPress={()=>{props.setScreen("CREATE_GHOST")}}
                 style={{ flexDirection : 'row' }}>
                 <View style={styles.cardContainer}>
                     <Text style={{...constyles.genH2Text, textAlign : 'center', color : 'white'}}>Make a Ghost!</Text>

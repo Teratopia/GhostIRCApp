@@ -25,17 +25,23 @@ class SelectedGhostScreen extends Component {
 
     this.onResponseSelection = this.onResponseSelection.bind(this);
     this.onGoBackInChatCardHistory = this.onGoBackInChatCardHistory.bind(this);
+    this.onResponseHandled = this.onResponseHandled.bind(this);
     this.props.socket.on('chatCardCreated', res => {
         console.log('chatCardCreated res = ', res);
-        //if(res.success){
-        //    this.setState({ responseBeingHandled : res.response });
-        //}
-        if(res.success){
-            this.setState({ responseBeingHandled : null });
-            this.props.setGhost(res.ghost);
-            this.onResponseSelection(res.response);
-        }
+        this.onResponseHandled(res);
     });
+    this.props.socket.on('responseRoutedToExistingChatCard', res => {
+        console.log('responseRoutedToExistingChatCard res = ', res);
+        this.onResponseHandled(res);
+    })
+  }
+
+  onResponseHandled(res){
+    if(res.success){
+        this.setState({ responseBeingHandled : null });
+        this.props.setGhost(res.ghost);
+        this.onResponseSelection(res.response);
+    }
   }
 
   componentDidMount(){
